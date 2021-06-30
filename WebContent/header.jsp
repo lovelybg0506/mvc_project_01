@@ -9,10 +9,13 @@
 <style type="text/css">
    td{
       border:1px solid black;
-      width:200px;
       height:40px;
       text-align:center;
-      background-color:skyblue;
+      
+   }
+   td.blue{
+         background-color:skyblue;
+         width:200px;
    }
 </style>
 </head>
@@ -20,12 +23,12 @@
 <div align="center">
    <h2>회원관리프로그램</h2>
    <form>
-      <table>
+      <table width="500px">
          <tr>
-         <td><a name="main" href="main.jsp">처음으로</a></td>
-         <td><a name="join" href="join.jsp">회원가입</a></td>
-         <td><a name="view" href="view.jsp">회원보기</a></td>
-         <td><a name="search" href="search.jsp">회원찾기</a></td>
+         <td class="blue"><a name="main" href="main.jsp">처음으로</a></td>
+         <td class="blue"><a name="join" href="join.jsp">회원가입</a></td>
+         <td class="blue"><a name="view" href="view.jsp">회원보기</a></td>
+         <td class="blue"><a name="search" href="search.jsp">회원찾기</a></td>
          </tr>
       </table>
    </form>

@@ -18,7 +18,7 @@ public class BoardDAO {
 	private BoardDAO() {
 		
 	}
-
+	
 	private static BoardDAO instance = new BoardDAO();
 	
 	public static BoardDAO getInstance() {
@@ -26,6 +26,7 @@ public class BoardDAO {
 		return instance;
 	}
 	
+	//커넥션 풀 설정
 	Connection getConnection() {
 		Connection conn = null;
 		Context initContext;
@@ -43,6 +44,7 @@ public class BoardDAO {
 		return conn;
 	}
 	
+	//유저 확인 
 	public int userCheck(String id, String pwd) {
 		int result = 1;
 		Connection conn = null;
@@ -101,8 +103,8 @@ public class BoardDAO {
 				member.setPwd(rs.getString("pwd"));
 				member.setName(rs.getString("name"));
 				member.setEmail(rs.getString("email"));
-				member.setGender(rs.getString("gender"));
 				member.setPhone(rs.getString("phone"));
+				member.setGender(rs.getString("gender"));
 			}
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -118,7 +120,7 @@ public class BoardDAO {
 		return member;
 		
 	}
-
+	
 	public void insertMember(BoardVO member) {
 		String sql = "insert into Board values(?,?,?,?,?,?)";
 		Connection conn = null;
@@ -147,21 +149,22 @@ public class BoardDAO {
 			}
 		}
 	}
-
-	public void updateMember(BoardVO member) {
-			String sql = "update Board set pwd=?,email=?,phone=? where id=?";
+	
+	// 회원 수정
+		public void updateMember(BoardVO member) {
+			String sql = "update Board set email=?,phone=? where id=?";// 비밀번호 이메일 연락처 수정
 			Connection conn = null;
 			PreparedStatement pstmt = null;
 
 			try {
 				conn = getConnection();
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, member.getPwd());
-				pstmt.setString(2, member.getEmail());
-				pstmt.setString(3, member.getPhone());
-				pstmt.setString(4, member.getId());				
+				pstmt.setString(1, member.getEmail());
+				pstmt.setString(2, member.getPhone());
+				pstmt.setString(3, member.getId());
 				
-				pstmt.close();
+				pstmt.executeUpdate();
+				
 				conn.close();
 				
 			} catch (Exception e) {
@@ -169,7 +172,8 @@ public class BoardDAO {
 			} 
 		}
 		
-	public void deleteMember(BoardVO member) {
+		// 회원 삭제
+		public void deleteMember(String id) {
 			String sql = "delete Board where id=?";
 			Connection conn = null;
 			PreparedStatement pstmt = null;
@@ -177,7 +181,7 @@ public class BoardDAO {
 			try {
 				conn = getConnection();
 				pstmt = conn.prepareStatement(sql);
-				pstmt.setString(1, member.getId());
+				pstmt.setString(1,id);
 				
 				pstmt.executeUpdate();
 				conn.close();
@@ -186,75 +190,151 @@ public class BoardDAO {
 				e.printStackTrace();
 			} 
 		}
-
-	public ArrayList<BoardVO> getMemberList(){
-        ArrayList<BoardVO> b= new ArrayList<BoardVO>();
-        String sql = "select * from Board";
-        BoardVO member=null;
-        Connection conn=null;
-        PreparedStatement pstmt=null;
-        ResultSet rs=null;
-                 
-        try {
-           conn = getConnection();
-           pstmt = conn.prepareStatement(sql);
-           rs = pstmt.executeQuery();
-           
-           while(rs.next()) {
-              member = new BoardVO();
-              member.setId(rs.getString(1));
-              member.setPwd(rs.getString(2));
-              member.setName(rs.getString(3));
-              member.setEmail(rs.getString(4));
-              member.setPhone(rs.getString(5));
-              member.setGender(rs.getString(6));
-              b.add(member);
-           }
-           conn.close();
-        }catch(Exception e) {
-           e.printStackTrace();
-        }
-        return b;
-        
-     }
-
-	public BoardVO searchMember(String name) {
-	      
-	      BoardVO member=null;
-	      Connection conn=null;
-	      PreparedStatement pstmt=null;
-	      ResultSet rs=null;
-	      
-	      String sql="select * from Board where name=?";
-	      
-	      try {
-	         conn=getConnection();
-	         pstmt=conn.prepareStatement(sql);
-	         pstmt.setString(1,name);
-	         
-	         rs=pstmt.executeQuery();
-	         
-	         if(rs.next()) {
-	            member=new BoardVO(); 
-	            member.setId(rs.getString("id")); 
-	            member.setPwd(rs.getString("pwd"));
-	            member.setName(rs.getString("name"));
-	            member.setEmail(rs.getString("email"));
-	            member.setPhone(rs.getString("phone"));
-	            member.setGender(rs.getString("gender"));
-	         }
-	      }catch(Exception e) {
-	         e.printStackTrace();
-	      }finally {
-	         try {
-	            rs.close();
-	            pstmt.close();
-	            conn.close();
-	         }catch(SQLException e) {
-	            e.printStackTrace();
-	         }
-	      }
-	      return member;
-	   }
+		
+		//회원보기
+		public ArrayList<BoardVO> getMemberList(){
+			ArrayList<BoardVO> b= new ArrayList<BoardVO>();
+			
+			Connection conn=null;
+			PreparedStatement pstmt=null;
+			ResultSet rs=null;
+						
+			try {
+				String sql = "select * from Board";
+				conn = getConnection();
+				pstmt = conn.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					BoardVO member = new BoardVO();
+					member.setId(rs.getString(1));
+					member.setPwd(rs.getString(2));
+					member.setName(rs.getString(3));
+					member.setEmail(rs.getString(4));
+					member.setPhone(rs.getString(5));
+					member.setGender(rs.getString(6));
+					b.add(member);
+				}
+				conn.close();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return b;
+			
+		}
+		
+		//멤버 찾기
+		public BoardVO searchMember(String name) {
+		      
+		      BoardVO member=null;
+		      Connection conn=null;
+		      PreparedStatement pstmt=null;
+		      ResultSet rs=null;
+		      
+		      String sql="select * from Board where name=?";
+		      
+		      try {
+		         conn=getConnection();
+		         pstmt=conn.prepareStatement(sql);
+		         pstmt.setString(1,name);
+		         
+		         rs=pstmt.executeQuery();
+		         
+		         if(rs.next()) {
+		            member=new BoardVO(); 
+		            member.setId(rs.getString("id")); 
+		            member.setPwd(rs.getString("pwd"));
+		            member.setName(rs.getString("name"));
+		            member.setEmail(rs.getString("email"));
+		            member.setPhone(rs.getString("phone"));
+		            member.setGender(rs.getString("gender"));
+		         }
+		      }catch(Exception e) {
+		         e.printStackTrace();
+		      }finally {
+		         try {
+		            rs.close();
+		            pstmt.close();
+		            conn.close();
+		         }catch(SQLException e) {
+		            e.printStackTrace();
+		         }
+		      }
+		      return member;
+		   }
+		
+		//한 명 멤버 꺼내오기
+		public BoardVO oneselectMember (String id) {
+			BoardVO bvo = new BoardVO();
+			
+			Connection conn=null;
+		    PreparedStatement pstmt=null;
+		    ResultSet rs=null;
+			
+			try {
+				conn=getConnection();
+				String sql = "select * from Board";
+				pstmt = conn.prepareStatement(sql);
+				rs=pstmt.executeQuery();
+				
+				while (rs.next()) {
+					bvo.setId(rs.getString(1));
+					bvo.setPwd(rs.getString(2));
+					bvo.setName(rs.getString(3));
+					bvo.setEmail(rs.getString(4));
+					bvo.setPhone(rs.getString(5));
+					bvo.setGender(rs.getString(6));
+				}
+				conn.close();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			return bvo;
+		}
+		public String getPwd1(String id) throws SQLException {
+			String pass = "";
+			
+			Connection conn=null;
+		    PreparedStatement pstmt=null;
+		    ResultSet rs=null;
+			try {
+				conn=getConnection();
+				String sql="select pwd from Board where id=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, id);
+				rs=pstmt.executeQuery();
+				
+				if(rs.next()) {
+					pass=rs.getString(1);
+				}
+				conn.close();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+			return pass;
+		}
+		public String getName(String name) throws SQLException {
+			String name2 = "";
+			
+			Connection conn=null;
+		    PreparedStatement pstmt=null;
+		    ResultSet rs=null;
+			try {
+				conn=getConnection();
+				String sql="select * from Board where name=?";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, name);
+				rs=pstmt.executeQuery();
+				
+				if(rs.next()) {
+					name2=rs.getString(1);
+				}
+				conn.close();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+			return name2;
+		}
 }
-

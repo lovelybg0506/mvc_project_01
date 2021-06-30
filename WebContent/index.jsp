@@ -12,3 +12,13 @@
 %>
 </body>
 </html>
+<!-- 
+create table Board(
+id varchar2(10) not null,
+pwd varchar2(10) not null,
+name varchar2(24),
+email varchar2(30),
+phone varchar2(30),
+gender char(10) default '1',
+primary key(id)
+); -->

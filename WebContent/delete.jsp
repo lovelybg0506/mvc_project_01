@@ -1,3 +1,5 @@
+<%@page import="com.project.dto.BoardVO"%>
+<%@page import="com.project.dao.BoardDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="header.jsp" %>
@@ -8,42 +10,48 @@
 <title>delete</title>
 </head>
 <body>
-	<form action="delete.jsp" method="post" name="frm">
-			<table width="550" align="center">
-				<tr>
-					<td colspan="2" align="center">회원삭제</td>
-				</tr>
-			<tr>
-				<td id="front">아이디</td>
-				<td><input type="text" name="id" value="${loginUser.id }" readonly="readonly"></td>
-			</tr>
-			<tr>
-				<td id="front">비밀번호</td>
-				<td><input type="password" name="pwd"></td>
-			</tr>
-			<tr>
-				<td id="front">이름</td>
-				<td><input type="text" name="name" value="${loginUser.name }"></td>
-			</tr>
-			<tr>
-				<td id="front">이메일</td>
-				<td><input type="text" name="email" value="${loginUser.email }"></td>
-			</tr>
-			<tr>
-				<td id="front">연락처</td>
-				<td><input type="text" name="phone" value="${loginUser.phone }"></td>
-			</tr>
-			<tr>
-				<td align="center">성별</td>
-				<td><input type="text" name="gender" value="${loginUser.gender }"></td>
-			</tr>
-			<tr align="center">
-				<td colspan="2">
-					<input type="submit" value="삭제">
-					<input type="reset" value="취소">
-				</td>
-			</tr>
-		</table>
-	</form>
+<%
+	String id=request.getParameter("id");
+	BoardDAO bdao = BoardDAO.getInstance();
+	BoardVO bvo = bdao.oneselectMember(id);
+%>
+<div align="center">
+<h3>회원 삭제</h3>
+	<form action="deleteproc.jsp" method="post">
+			<table width="400" border="1">
+			<tr height= "50">
+			<td align="center" width="150">아이디</td>
+			<td width = "250"><%=bvo.getId() %></td>
+		</tr>
+		
+		<tr height= "50">	
+			<td align="center" width="150">이메일</td>
+			<td width="250">
+			<input type ="email" name="email" value="<%=bvo.getEmail() %>">
+			</td>
+		</tr>
+		
+		<tr height = "50">
+			<td align="center" width="150">전화번호</td>
+			<td width="250">
+			<input type="text" name="phone" value="<%=bvo.getPhone() %>">
+			</td>
+		</tr>
+		<tr height = "50">
+			<td align="center" width="150">암호</td>
+			<td width="250">
+				<input type="password" name="pwd">
+			</td>
+		</tr>
+		<tr height="50">
+			<td align="center" colspan="2">
+				<input type="hidden" name="id" value="<%=bvo.getId() %>">
+				<input type="submit" value="회원 삭제">&nbsp;&nbsp;				
+				<button type ="button" onclick="location.href ='view.jsp'">회원 전체 보기</button>				
+			</td>
+		</tr>
+</table>
+</form>
+</div>
 </body>
 </html>

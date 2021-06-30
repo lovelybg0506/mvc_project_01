@@ -44,7 +44,7 @@ public class BoardVO {
 	}	
 	
 	public String toString() {
-		return "MemberVO[id="+id+",pwd"+pwd+",name=\"+name+\",email="+email+",gender\"+gender+\",phone=\"+phone+\"]";
-//		return "MemberVO[id="+id+",pwd"+pwd+",name="+name+",email="+email+",phone"+phone+",gender="+gender+"]";
+//		return "MemberVO[id="+id+",pwd"+pwd+",name=\"+name+\",email="+email+",gender\"+gender+\",phone=\"+phone+\"]";
+		return "MemberVO[id="+id+",pwd="+pwd+",name="+name+",email="+email+",phone"+phone+",gender="+gender+"]";
 	}
 }

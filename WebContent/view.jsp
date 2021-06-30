@@ -4,6 +4,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ include file="header.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,10 +16,9 @@
 	BoardDAO bdao = BoardDAO.getInstance();
 	ArrayList<BoardVO> bvc = bdao.getMemberList();
 %>
-
 <div align="center">
 
-<h1>모든 회원 보기</h1>
+<h3>모든 회원 보기</h3>
 	<table width="800" border="1">
 		<tr height = "50">
 			<td align="center" width="150">아이디</td>
@@ -37,10 +37,10 @@
 				<td align = "center" width = "150"><%=vo.getId() %></td>
 				<td align="center" width="150"><%=vo.getName() %></td>				
 				<td align="center" width="250"><%=vo.getEmail() %></td>				
-				<td align="center" width="200"><%=vo.getPhone() %></td>			
-				<td align="center" width="200"><%=vo.getGender() %></td>
-				<td align="center" width="200"><button onclick="location.href='delete.jsp'">삭제</button></td>
-				<td align="center" width="200"><button onclick="location.href='update.jsp'">수정</button></td>
+				<td align="center" width="250"><%=vo.getPhone() %></td>				
+				<td align="center" width="200"><%=vo.getGender() %></td>				
+				<td align="center" width="200"><input type="button" value="수정" onclick="location.href='update.do'"></td>
+				<td align="center" width="200"><input type="button" value="삭제" onclick="location.href='delete.do'"></td>
 			</tr>
 		<%
 			}

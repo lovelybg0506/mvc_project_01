@@ -1,9 +1,7 @@
 <%@page import="com.project.dto.BoardVO"%>
-<%@page import="java.util.ArrayList"%>
 <%@page import="com.project.dao.BoardDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ include file="header.jsp" %>
 <!DOCTYPE html>
 <html>
@@ -13,66 +11,47 @@
 </head>
 <body>
 <%
+	String id=request.getParameter("id");
 	BoardDAO bdao = BoardDAO.getInstance();
-	ArrayList<BoardVO> bvc = bdao.getMemberList();
+	BoardVO bvo = bdao.oneselectMember(id);
 %>
-<%
-			for(int i = 0; i<bvc.size();i++){
-				BoardVO vo = bvc.get(i);
-%>
-	<form action="update.do" method="post" name="frm">
-		<table align="center" width="550">
-			<tr>
-				<td colspan="2" align="center">회원수정</td>
-			</tr>
-			<tr>
-				<td id="front">아이디</td>
-				<td><%=vo.getId() %></td>
-			</tr>
-			<tr>
-				<td id="front">비밀번호</td>
-				<td><input type="password" name="pwd"></td>
-			</tr>
-			<tr>
-				<td id="front">이름</td>
-				<td><input type="text" name="name" value="${member.name }"></td>
-			</tr>
-			<tr>
-				<td id="front">이메일</td>
-				<td><input type="text" name="email" value="${member.email }"></td>
-			</tr>
-			<tr>
-				<td id="front">연락처</td>
-				<td><input type="text" name="phone" value="${member.phone }"></td>
-			</tr>
-			<tr>
-				<td align="center">성별</td>
-				<td>
-					<select name="gender">
-					<c:choose>
-							<c:when test='${member.gender == "1" }'>
-								<option value="1" selected="selected">남자</option>
-								<option value="2" >여자</option>
-							</c:when>
-							<c:otherwise>
-								<option value="1">남자</option>
-								<option value="2" selected="selected">여자</option>
-							</c:otherwise>
-						</c:choose>
-					</select>
-				</td>
-			</tr>
-			<tr align="center">
-				<td colspan="2">
-					<input type="submit" value="수정">
-					<input type="reset" value="취소">
-					<input type="button" value="메인 페이지로 이동" onclick="location.href='main.jsp'">
-				</td>
-			</tr>
-		<%
-			}
-		%>	
-		</table>
-	</form>
+<div align="center">
+<h3>회원 정보 수정하기</h3>
+<form action="updateproc.jsp" method="post">
+<table width="400" border="1">
+		<tr height= "50">
+			<td align="center" width="150">아이디</td>
+			<td width = "250"><%=bvo.getId() %></td>
+		</tr>
+		
+		<tr height= "50">	
+			<td align="center" width="150">이메일</td>
+			<td width="250">
+			<input type ="email" name="email" value="<%=bvo.getEmail() %>">
+			</td>
+		</tr>
+		
+		<tr height = "50">
+			<td align="center" width="150">전화번호</td>
+			<td width="250">
+			<input type="text" name="phone" value="<%=bvo.getPhone() %>">
+			</td>
+		</tr>
+		<tr height = "50">
+			<td align="center" width="150">암호</td>
+			<td width="250">
+				<input type="password" name="pwd">
+			</td>
+		</tr>
+		<tr height="50">
+			<td align="center" colspan="2">
+				<input type="hidden" name="id" value="<%=bvo.getId() %>">
+				<input type="submit" value="회원 수정">&nbsp;&nbsp;				
+				<button type ="button" onclick="location.href ='view.jsp'">회원 전체 보기</button>				
+			</td>
+		</tr>
+</table>
+</form>
+</div>
 </body>
 </html>

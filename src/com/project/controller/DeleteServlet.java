@@ -14,16 +14,16 @@ import com.project.dao.BoardDAO;
 import com.project.dto.BoardVO;
 
 /**
- * Servlet implementation class UpdateServlet
+ * Servlet implementation class DeleteServlet
  */
-@WebServlet("/update.do")
-public class UpdateServlet extends HttpServlet {
+@WebServlet("/delete.do")
+public class DeleteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public UpdateServlet() {
+    public DeleteServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -34,7 +34,6 @@ public class UpdateServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-	
 		HttpSession session = request.getSession();
 		BoardVO bvo = (BoardVO)session.getAttribute("loginUser");
 		if(bvo != null) {
@@ -43,7 +42,7 @@ public class UpdateServlet extends HttpServlet {
 			RequestDispatcher dispatcher = request.getRequestDispatcher(url);
 			dispatcher.forward(request, response);
 		}else {
-			response.sendRedirect("update.jsp");
+			response.sendRedirect("delete.jsp");
 		}
 	}
 
@@ -53,9 +52,8 @@ public class UpdateServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
-		
+		String id=null;
 		request.setCharacterEncoding("utf-8");
-		System.out.println(request.getParameter("name"));
 		HttpSession session = request.getSession();
 		
 		BoardVO member = new BoardVO();
@@ -67,11 +65,11 @@ public class UpdateServlet extends HttpServlet {
 		member.setGender(request.getParameter("gender"));
 		
 		BoardDAO bdao = BoardDAO.getInstance();
-		bdao.updateMember(member);
+		bdao.deleteMember(id);
 		
 		BoardVO bvo = bdao.getMember(member.getId());
 		request.setAttribute("member",bvo);
-		request.setAttribute("message", "회원 정보가 수정되었습니다.");
+		request.setAttribute("message", "회원 삭제 완료되었습니다.");
 		
 		session.setAttribute("loginUser", bvo);
 		
@@ -79,6 +77,7 @@ public class UpdateServlet extends HttpServlet {
 		session.setAttribute("result",result); // setAttribute(String name, Object value)
 		
 		String url = "main.jsp";
+		
 		RequestDispatcher dispatcher = request.getRequestDispatcher(url);
 		dispatcher.forward(request, response);
 		
